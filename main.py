@@ -38,7 +38,6 @@ class MegaAccount:
         if not self.email: return
         registration = await asyncio.create_subprocess_shell(f"./megatools reg --scripted --register --email {self.email} --name {self.name} --password {self.password}", stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL)
         stdout, _ = await registration.communicate()
-        print(stdout)
         self.verify_command = stdout.decode("utf8").strip()
 
     async def verify(self):
@@ -91,7 +90,7 @@ class User:
             await bot.edit_message_text(cid, mid, "Аккаунт зарегистрирован!")
             await bot.send_message(cid, f"Логин: `{login}`\nПароль: `{password}`", parse_mode=ParseMode.MARKDOWN)
         except Exception as e:
-            print(e)
+            #print(e)
             await bot.send_message(cid, "Возникла неизвестная ошибка. Повторите попытку позже.")
         self.state = 3
         del users[self.id]
