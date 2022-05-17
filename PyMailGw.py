@@ -42,9 +42,11 @@ class MailGwApi:
             return None
     
     async def fetch_inbox(self):
+        print(self.headers)
         async with ClientSession() as session:
             async with session.get(self.getUrl(f'{self.base_url}/messages'), headers=self.headers) as resp:
                 j = await resp.json()
+        print(j)
         return j.get('hydra:member')
     
     async def get_message(self, message_id):

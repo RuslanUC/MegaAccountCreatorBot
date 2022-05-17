@@ -3,11 +3,12 @@ import asyncio
 from re import compile
 from random import choice
 from csv import writer
-from PyMailGw import MailGwApi
+from PyOneSecMail import OneSecMailApi
 from pyrogram import Client, filters
 from pyrogram.enums import ParseMode
 from os import environ
 from time import time
+from json import dumps as jdumps
 
 _re = compile(r"https{0,1}:\/\/mega.nz\/#confirm[a-zA-Z0-9_-]{80,}")
 bot = Client(
@@ -24,19 +25,13 @@ class MegaAccount:
         self.password = password
 
     async def init_mail(self):
-        self.mapi = MailGwApi()
+        self.mapi = OneSecMailApi()
         self.email = await self.mapi.get_mail()
-        if not self.email:
-            for _ in range(3):
-                await asyncio.sleep(3)
-                self.email = await self.mapi.get_mail()
-                if self.email:
-                    break
         return self
 
     async def register(self):
         if not self.email: return
-        registration = await asyncio.create_subprocess_shell(f"./megatools reg --scripted --register --email {self.email} --name {self.name} --password {self.password}", stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL)
+        registration = await asyncio.create_subprocess_shell(f"./megatools reg --scripted --register --email {self.email} --name {self.name} --password {password}", stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL)
         stdout, _ = await registration.communicate()
         self.verify_command = stdout.decode("utf8").strip()
 
@@ -48,8 +43,8 @@ class MegaAccount:
                 break
             await asyncio.sleep(3)
             for mail in await self.mapi.fetch_inbox():
-                if "MEGA" in mail["subject"]:
-                    content = await self.mapi.get_message_content(mail['id'])
+                if "MEGA" in mail.subject or "mega" in mail.text.lower() or "mega" in mail.mfrom.lower():
+                    content = mail.text
                     break
 
         link = _re.findall(content)
@@ -90,7 +85,7 @@ class User:
             await bot.edit_message_text(cid, mid, "Аккаунт зарегистрирован!")
             await bot.send_message(cid, f"Логин: `{login}`\nПароль: `{password}`", parse_mode=ParseMode.MARKDOWN)
         except Exception as e:
-            #print(e)
+            print(e)
             await bot.send_message(cid, "Возникла неизвестная ошибка. Повторите попытку позже.")
         self.state = 3
         del users[self.id]
@@ -112,9 +107,9 @@ async def message_account(_cl, message):
         return
     if users[message.from_user.id].state != 0:
         return
-    if len(message.text) < 8:
+    if len(message.text.replace("\"", "").replace(" ", "")) < 8:
         return
-    users[message.from_user.id].setPassword(message.text)
+    users[message.from_user.id].setPassword(message.text.replace("\"", "").replace(" ", ""))
     msg = await message.reply(f"...")
     await users[message.from_user.id].register(msg.id, message.from_user.id)
 
