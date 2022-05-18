@@ -5,14 +5,14 @@ from random import choice
 from datetime import datetime
 
 class Message:
-	def __init__(self, id, mfrom, subject, date, body, text, html):
-		self.id = id
-		self.mfrom = mfrom
-		self.subject = subject
-		self.date = date
-		self.body = body
-		self.text = text
-		self.html = html
+    def __init__(self, id, mfrom, subject, date, body, text, html):
+        self.id = id
+        self.mfrom = mfrom
+        self.subject = subject
+        self.date = date
+        self.body = body
+        self.text = text
+        self.html = html
 
 class OneSecMailApi:
     def __init__(self):
@@ -42,10 +42,10 @@ class OneSecMailApi:
     async def fetch_inbox(self):
         async with ClientSession() as session:
             async with session.get(self.getUrl(f'{self.base_url}?action=getMessages&login={self.login}&domain={self.domain}')) as resp:
-            	for message in await resp.json():
-            		if [m for m in self.mailbox if m.id == message["id"]]:
-            			continue
-            		self.mailbox.append(await self.get_message(message["id"]))
+                for message in await resp.json():
+                    if [m for m in self.mailbox if m.id == message["id"]]:
+                        continue
+                    self.mailbox.append(await self.get_message(message["id"]))
         return self.mailbox.copy()
     
     async def get_message(self, message_id):
@@ -53,12 +53,12 @@ class OneSecMailApi:
             async with session.get(self.getUrl(f'{self.base_url}?action=readMessage&login={self.login}&domain={self.domain}&id={message_id}')) as resp:
                 j = await resp.json()
                 msg = Message(
-                	id=j.get("id"),
-					mfrom=j.get("from"),
-					subject=j.get("subject"),
-					date=datetime.fromisoformat(j.get("date")),
-					body=j.get("body"),
-					text=j.get("textBody"),
-					html=j.get("htmlBody")
+                    id=j.get("id"),
+                    mfrom=j.get("from"),
+                    subject=j.get("subject"),
+                    date=datetime.fromisoformat(j.get("date")),
+                    body=j.get("body"),
+                    text=j.get("textBody"),
+                    html=j.get("htmlBody")
                 )
         return msg

@@ -10,7 +10,7 @@ from os import environ
 from time import time
 from json import dumps as jdumps
 
-_re = compile(r"https{0,1}:\/\/mega.nz\/#confirm[a-zA-Z0-9_-]{80,}")
+_re = compile(r"https{0,1}:\/\/mega.nz\/#confirm[a-zA-Z0-9_-]{80,512}")
 bot = Client(
     "MegaNzBot",
     api_id=int(environ.get("API_ID")),
