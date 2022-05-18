@@ -1,1 +1,1 @@
-bot: python main.py
+bot: chmod +x megatools && python main.py
