@@ -4,6 +4,8 @@ Telegram bot to create mega.nz accounts.
 
 Demo: https://t.me/megaaccount_bot
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 <details>
 <summary><b>Enviroment variables you need to set:</b></summary>
 
