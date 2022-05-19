@@ -21,3 +21,10 @@ Demo: https://t.me/megaaccount_bot
 Send `/account` command and then send a password you want to set on your mega.nz account. You will got your account in 10-30 seconds.
 
 </details>
+
+<details>
+<summary><b>Screenshot</b></summary>
+
+![Screenshot](images/screenshot.png)
+
+</details>
