@@ -71,35 +71,35 @@ class User:
     async def register(self, mid, cid):
         m = False
         while list(users.keys()).index(self.id) not in range(4):
-            await bot.edit_message_text(cid, mid, f"Ваше место в очереди: {len(users)-2} ({round(len(users)*0.3, 1)} минут).\n\nПодробнее - /help")
+            await bot.edit_message_text(cid, mid, f"Your place in queue: {len(users)-2} ({round(len(users)*0.3, 1)} minutes).\n\nDetails - /help")
             m = True
             await asyncio.sleep(7)
         self.state = 2
-        await bot.edit_message_text(cid, mid, "Получение временной почты...")
+        await bot.edit_message_text(cid, mid, "Requesting temporary email...")
         try:
             acc = await MegaAccount("".join(choice("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") for x in range(24)), self.password).init_mail()
-            await bot.edit_message_text(cid, mid, "Почта получена, регистрация...")
+            await bot.edit_message_text(cid, mid, "Email received, registering...")
             await acc.register()
-            await bot.edit_message_text(cid, mid, "Ожидание письма со ссылкой активации...")
+            await bot.edit_message_text(cid, mid, "Waiting for an email with an activation link...")
             login, password = await acc.verify()
-            await bot.edit_message_text(cid, mid, "Аккаунт зарегистрирован!")
-            await bot.send_message(cid, f"Логин: `{login}`\nПароль: `{password}`", parse_mode=ParseMode.MARKDOWN)
+            await bot.edit_message_text(cid, mid, "Account registered!")
+            await bot.send_message(cid, f"Login: `{login}`\nPassword: `{password}`", parse_mode=ParseMode.MARKDOWN)
         except Exception as e:
             print(e)
-            await bot.send_message(cid, "Возникла неизвестная ошибка. Повторите попытку позже.")
+            await bot.send_message(cid, "An unknown error occured. Please try again later.")
         self.state = 3
         del users[self.id]
 
 @bot.on_message(~filters.bot & filters.text & filters.command(["account"]))
 async def command_account(_cl, message):
     if message.from_user.id in users:
-        return await message.reply("Вы уже запросили аккаунт. Пожалуйста, подождите.")
+        return await message.reply("You already requested an account. Wait, please.")
     users[message.from_user.id] = User(message.from_user.id)
-    return await message.reply("Отправьте пароль, который хотите установить на аккаунт (минимум 8 символов)")
+    return await message.reply("Send the password you want to set for your account (min. 8 characters)")
 
 @bot.on_message(~filters.bot & filters.text & (filters.command(["start"]) | filters.command(["help"])))
 async def command_account(_cl, message):
-    return await message.reply("Для получения аккаунта введите /account, а затем отправьте пароль, который вы хотите установить на аккаунт. Если нет очереди - вы получите аккаунт в течении 10-30 секунд. Очередь нужна для того, чтобы сервера временной почты и/или меги не получали слишком много запросов и в последствии не заблокировали работу бота.")
+    return await message.reply("To get an account enter /account, and then send the password you want to set for your account. If there is no queue - you will get an account within 10-30 seconds. The queue is needed so that the temporary mail servers and/or mega.nz do not receive too many requests and do not block the bot.")
 
 @bot.on_message(~filters.bot & filters.text)
 async def message_account(_cl, message):
