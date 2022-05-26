@@ -31,7 +31,11 @@ class MegaAccount:
 
     async def register(self):
         if not self.email: return
-        registration = await asyncio.create_subprocess_shell(f"./megatools --register --email {self.email} --name {self.name} --password {self.password}", stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL)
+        p = self.password
+        if "'" in p or "\"" in p or "\\" in p:
+            p = p.replace("'", "\\'").replace("\"", "\\\"").replace("\\", "\\\\")
+            p = f"\"{p}\""
+        registration = await asyncio.create_subprocess_shell(f"./megatools --register --email {self.email} --name {self.name} --password {p}", stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL)
         stdout, _ = await registration.communicate()
         self.verify_command = stdout.decode("utf8").strip()
 
