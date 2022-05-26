@@ -109,7 +109,7 @@ async def message_account(_cl, message):
         return
     if len(message.text.replace("\"", "").replace(" ", "")) < 8:
         return
-    users[message.from_user.id].setPassword(message.text.replace("\\", "").replace("\"", "").replace(" ", "")replace("'", ""))
+    users[message.from_user.id].setPassword(message.text.replace("\\", "").replace("\"", "").replace(" ", "").replace("'", ""))
     msg = await message.reply(f"...")
     await users[message.from_user.id].register(msg.id, message.from_user.id)
 
