@@ -6,6 +6,10 @@ Demo: https://t.me/megaaccount_bot
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
+Not tested buttons:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FRuslanUC%2FMegaAccountCreatorBot&env=API_ID,API_HASH,BOT_TOKEN&project-name=meganz-bot)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/ydZzLZ)
+
 <details>
 <summary><b>Enviroment variables you need to set:</b></summary>
 
